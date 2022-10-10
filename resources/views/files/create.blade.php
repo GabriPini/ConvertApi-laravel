@@ -9,7 +9,7 @@
 
             @csrf
             <div class="form-group mt-4">
-              <input type="file" name="file" class="form-control" accept=".doc,.pdf,">
+              <input type="file" name="File" class="form-control" accept=".doc,.pdf,">
             </div>
 
             <div class="form-group mt-4">

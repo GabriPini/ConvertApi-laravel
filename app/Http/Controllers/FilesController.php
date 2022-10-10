@@ -7,6 +7,10 @@ use App\Models\File;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFileRequest;
 
+
+
+use Illuminate\Support\Facades\Http;
+
 class FilesController extends Controller
 {
     /**
@@ -16,10 +20,12 @@ class FilesController extends Controller
      */
     public function index()
     {
+
         $files = File::orderByDesc('id')->get();
 
 
-        return view('files.index', compact('files'));
+
+        return view('files.index', compact('files', ));
 
     }
 
@@ -34,6 +40,7 @@ class FilesController extends Controller
 
 
         return view('files.create');
+
     }
 
     /**
@@ -44,33 +51,38 @@ class FilesController extends Controller
      */
     public function store(StoreFileRequest $request, )
     {
-        $fileName = $request->file->getClientOriginalName();
-        $originalFile = $request->file;
 
-        $type = $request->file->getClientMimeType();
-        $size = $request->file->getSize();
+        $fileName = $request->File->getClientOriginalName();
+        $originalFile = $request->File;
+
+        $type = $request->File->getClientMimeType();
+        $size = $request->File->getSize();
+
         $secret ='ltE5TH69gYyu4IKI';
         $from_format = substr($type, strrpos($type, '/') + 1);
         $to_format = $request->selectType;
 
 
 
+
+
+
+        $request->File->move(public_path('file'), $fileName);
         $Api = 'https://v2.convertapi.com/'. $from_format . '/to/' . $to_format . '?Secret=' .$secret .'&download=attachment';
 
-
-        $request->file->move(public_path('file'), $fileName);
-
         File::create([
-            'originalFile' =>  $originalFile,
+            'originalFile' =>  $originalFile, //forse da togliere o cambiare
             'name' => $fileName,
             'type' => $type,
-            'toType' =>    $to_format,
+            'toType' => $to_format,
             'size' => $size,
             'api' => $Api
         ]);
 
-        return redirect()->route('files.index')->withSuccess(__('File added successfully.'));
+
+        return view('files.index', compact('Api'));
     }
+
 
     public function destroy(File $id)
     {

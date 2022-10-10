@@ -34,8 +34,9 @@
 
                 </td>
 
-                <td width="5%"><form method="post"  action="{{ $file->api}}">
-                   {{-- Capite come far leggere il file alla chiamata che come errore non prende il file --}}
+                <td width="5%"><form method="post"  action="{{ $file->api}}" enctype="multipart/form-data">
+
+                  {{-- Vedere come far leggere il fiel gia esistente  --}}
                     <button type="submit" class="btn btn-primary">Converti</button>
                 </form>
 
